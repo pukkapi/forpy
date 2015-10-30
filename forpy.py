@@ -1,6 +1,8 @@
+#!/bin/python
+
 import pyshark
 import sys
-
+import argparse
 
 #Print usage function
 
@@ -12,7 +14,7 @@ ForPy - the network forensics toolkit
 
 Usage:
 
-forpy.py <capturefile>
+forpy.py -f <capturefile>
 
 """
 
@@ -25,7 +27,7 @@ globcapture = 0
 def import_file(cap_file):
   global globcapture
   globcapture = pyshark.FileCapture(cap_file)
-  #print capture[0] #Test 
+  print globcapture[0] #Test 
 
 #Print out all IP's in the capture file
 
@@ -43,13 +45,21 @@ def list_ips(capture):
     print x
 
 
-#Argument Parsing Section
+#Main
 
-if len(sys.argv) != 2:
-  print_usage()
-else:
-  cap_file = sys.argv[1]
-  print "Analysing Capture File: " + cap_file
-  import_file(cap_file)
-  list_ips(globcapture)
+def main():
+  
 
+  parser = argparse.ArgumentParser(description='Modular Network Forensics tool')
+
+  parser.add_argument('-f', '--file', help="File to be Analysed")
+  args = parser.parse_args()
+  import_file(args.file)
+  
+
+
+if __name__ == "__main__":
+  if len(sys.argv) < 2:
+    print_usage()
+  else:
+    main()
